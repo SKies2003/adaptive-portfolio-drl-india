@@ -225,27 +225,27 @@ test_vix = vix_df.loc[start_test:end_test]
 
 
 class PPO(nn.Module):
-  def __init__(self, state_dim, action_dim):
-    super(PPO, self).__init__()
-    self.fc1 = nn.Linear(state_dim, 256)
-    self.fc2 = nn.Linear(256, 128)
-    self.dropout = nn.Dropout(0.2)
-    self.actor = nn.Linear(128, action_dim)  
-    self.critic = nn.Linear(128, 1)  
+    def __init__(self, state_dim, action_dim):
+        super(PPO, self).__init__()
+        self.fc1 = nn.Linear(state_dim, 256)
+        self.fc2 = nn.Linear(256, 128)
+        self.dropout = nn.Dropout(0.2)
+        self.actor = nn.Linear(128, action_dim)  
+        self.critic = nn.Linear(128, 1)  
 
-  def forward(self, x):
-    x = torch.relu(self.fc1(x))
-    x = self.dropout(x)
-    x = torch.relu(self.fc2(x))
-    action_probs = torch.softmax(self.actor(x), dim=-1)
-    state_value = self.critic(x)
-    return action_probs, state_value
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = self.dropout(x)
+        x = torch.relu(self.fc2(x))
+        action_probs = torch.softmax(self.actor(x), dim=-1)
+        state_value = self.critic(x)
+        return action_probs, state_value
 
 # Ensure proper initialization
 def init_weights(m):
-  if type(m) == nn.Linear:
-    nn.init.xavier_uniform_(m.weight)
-    m.bias.data.fill_(0.01)
+    if type(m) == nn.Linear:
+        nn.init.xavier_uniform_(m.weight)
+        m.bias.data.fill_(0.01)
 
 def initialize_ppo_model(device):
     """
@@ -309,8 +309,7 @@ def ppo_update(model, optimizer, mse_loss, memory, gamma, clip_epsilon, device, 
 The advantage of PPO is its flexibility and robustness to different settings, so one can experiment with its hyperparameters to see what works best for each scenario.
 '''
 
-def train_ppo(train_df, episodes=250, gamma=0.997, epsilon=0.08, clip_epsilon=0.15, 
-              update_steps=20, batch_size=128, early_stop_threshold=0.002, patience=60, lr=0.0005):
+def train_ppo(train_df, episodes=250, gamma=0.997, epsilon=0.08, clip_epsilon=0.15, update_steps=20, batch_size=128, early_stop_threshold=0.002, patience=60, lr=0.0005):
     """
     Trains a Proximal Policy Optimization (PPO) model for stock trading.
 
